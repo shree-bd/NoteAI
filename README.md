@@ -14,3 +14,7 @@ Responsive and interactive UI built with React
 State management using React hooks and context API (or Redux if applicable)
 Secure API integration using JWT tokens for authentication
 User-friendly forms for data input and submission
+
+# Installation
+
+# Screenshots
