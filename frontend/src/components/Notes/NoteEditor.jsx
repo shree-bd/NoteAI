@@ -10,6 +10,7 @@ import 'react-quill/dist/quill.snow.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNotes } from '../../contexts/NotesContext';
 import Select from 'react-select';
+import AiAssistant from '../AI/AiAssistant';
 
 const NoteEditor = ({ isOpen, onClose, note = null }) => {
   const { createNote, updateNote } = useNotes();
@@ -86,6 +87,23 @@ const NoteEditor = ({ isOpen, onClose, note = null }) => {
     }
   };
 
+  // AI Assistant handlers
+  const handleAiSuggestion = (type, value) => {
+    switch (type) {
+      case 'title':
+        setTitle(value);
+        break;
+      case 'content':
+        setContent(value);
+        break;
+      case 'category':
+        setCategory(value);
+        break;
+      default:
+        break;
+    }
+  };
+
   const quillModules = {
     toolbar: [
       [{ 'header': [1, 2, 3, false] }],
@@ -149,9 +167,14 @@ const NoteEditor = ({ isOpen, onClose, note = null }) => {
                 <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center">
                   <TagIcon className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                 </div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {isEditing ? 'Edit Note' : 'Create New Note'}
-                </h2>
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    {isEditing ? 'Edit Note' : 'Create New Note'}
+                  </h2>
+                  <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">
+                    ✨ NoteAI - AI-Powered Note Editor
+                  </p>
+                </div>
               </div>
               
               <div className="flex items-center space-x-3">
@@ -213,6 +236,13 @@ const NoteEditor = ({ isOpen, onClose, note = null }) => {
                 </div>
               </div>
 
+              {/* AI Assistant */}
+              <AiAssistant
+                content={content}
+                title={title}
+                onApplySuggestion={handleAiSuggestion}
+              />
+
               {/* Rich Text Editor */}
               <div className="flex-1 overflow-hidden">
                 <ReactQuill
@@ -221,7 +251,7 @@ const NoteEditor = ({ isOpen, onClose, note = null }) => {
                   onChange={setContent}
                   modules={quillModules}
                   formats={quillFormats}
-                  placeholder="Start writing your note..."
+                  placeholder="Start writing your note... (Try the AI Assistant above for smart suggestions! 🤖)"
                   className="h-full"
                   style={{ height: 'calc(100% - 42px)' }}
                 />

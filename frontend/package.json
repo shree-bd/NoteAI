@@ -1,8 +1,9 @@
 {
-  "name": "frontend",
+  "name": "noteai-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "NoteAI - AI-Powered Note-Taking Application Frontend",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -26,7 +27,8 @@
     "react-beautiful-dnd": "^13.1.1",
     "tailwindcss": "^3.3.3",
     "autoprefixer": "^10.4.15",
-    "postcss": "^8.4.29"
+    "postcss": "^8.4.29",
+    "@types/react-beautiful-dnd": "^13.1.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.64",

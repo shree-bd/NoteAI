@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from .serializers import UserSerializer, NoteSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Note
+from .ai_service import get_ai_suggestions, enhance_note_content, generate_smart_title
 
 
 class NoteListCreate(generics.ListCreateAPIView):
@@ -56,6 +57,91 @@ class NoteDelete(generics.DestroyAPIView):
     def get_queryset(self):
         user = self.request.user
         return Note.objects.filter(author=user)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def ai_analyze_note(request):
+    """AI-powered note analysis with suggestions"""
+    try:
+        content = request.data.get('content', '')
+        title = request.data.get('title', '')
+        
+        if not content:
+            return Response(
+                {'error': 'Content is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        ai_suggestions = get_ai_suggestions(content, title)
+        
+        return Response({
+            'success': True,
+            'ai_suggestions': ai_suggestions,
+            'message': 'AI analysis completed successfully! 🤖'
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'AI analysis failed: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def ai_enhance_content(request):
+    """AI-powered content enhancement"""
+    try:
+        content = request.data.get('content', '')
+        
+        if not content:
+            return Response(
+                {'error': 'Content is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        enhancement = enhance_note_content(content)
+        
+        return Response({
+            'success': True,
+            'enhancement': enhancement,
+            'message': 'Content enhanced by AI! ✨'
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'AI enhancement failed: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def ai_generate_title(request):
+    """AI-powered smart title generation"""
+    try:
+        content = request.data.get('content', '')
+        
+        if not content:
+            return Response(
+                {'error': 'Content is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        smart_title = generate_smart_title(content)
+        
+        return Response({
+            'success': True,
+            'suggested_title': smart_title,
+            'message': 'Smart title generated! 🎯'
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Title generation failed: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['PATCH'])

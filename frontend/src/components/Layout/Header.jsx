@@ -3,14 +3,20 @@ import {
   Squares2X2Icon, 
   ListBulletIcon,
   UserCircleIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  PlusIcon,
+  SunIcon,
+  MoonIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 import { useNotes } from '../../contexts/NotesContext';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../../contexts/ThemeContext';
 
-const Header = () => {
+const Header = ({ onNewNote }) => {
   const { viewMode, setViewMode, filteredNotes, selectedCategory } = useNotes();
   const navigate = useNavigate();
+  const { isDark, toggleTheme } = useTheme();
 
   const handleLogout = () => {
     localStorage.clear();
@@ -39,55 +45,40 @@ const Header = () => {
   return (
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {getCategoryTitle()}
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            {filteredNotes.length} {filteredNotes.length === 1 ? 'note' : 'notes'}
-          </p>
-        </div>
-
         <div className="flex items-center space-x-4">
-          {/* View Toggle */}
-          <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-md transition-colors ${
-                viewMode === 'grid'
-                  ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-              }`}
-            >
-              <Squares2X2Icon className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded-md transition-colors ${
-                viewMode === 'list'
-                  ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-              }`}
-            >
-              <ListBulletIcon className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* User Menu */}
           <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
-              <UserCircleIcon className="w-6 h-6" />
-              <span className="text-sm font-medium">User</span>
-            </div>
-            
-            <button
-              onClick={handleLogout}
-              className="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
-              title="Logout"
-            >
-              <ArrowRightOnRectangleIcon className="w-5 h-5" />
-            </button>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              NoteAI
+            </h1>
+            <SparklesIcon className="w-6 h-6 text-purple-500 animate-pulse" />
           </div>
+          
+          {/* AI-Powered Badge */}
+          <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-lg">
+            <SparklesIcon className="w-4 h-4 text-white" />
+            <span className="text-white text-sm font-bold">AI-Powered NoteApp</span>
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={onNewNote}
+            className="btn-primary flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+          >
+            <PlusIcon className="w-5 h-5" />
+            <span>New Note</span>
+          </button>
+          
+          <button
+            onClick={toggleTheme}
+            className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+          >
+            {isDark ? (
+              <SunIcon className="w-6 h-6" />
+            ) : (
+              <MoonIcon className="w-6 h-6" />
+            )}
+          </button>
         </div>
       </div>
     </header>
