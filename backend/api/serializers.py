@@ -16,7 +16,29 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class NoteSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
+    
     class Meta:
         model = Note
-        fields = ["id", "title", "content", "created_at", "author"]
-        extra_kwargs = {"author": {"read_only": True}}
+        fields = [
+            "id", 
+            "title", 
+            "content", 
+            "category",
+            "created_at", 
+            "updated_at",
+            "is_favorite",
+            "is_archived",
+            "author"
+        ]
+        read_only_fields = ["id", "created_at", "updated_at", "author"]
+
+    def validate_title(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Title cannot be empty.")
+        return value.strip()
+
+    def validate_content(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Content cannot be empty.")
+        return value
